@@ -14,6 +14,16 @@ export type { AutomationCompatible } from "./@chainlink/contracts/src/v0.8/autom
 export { AutomationCompatible__factory } from "./factories/@chainlink/contracts/src/v0.8/automation/AutomationCompatible__factory";
 export type { AutomationCompatibleInterface } from "./@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface";
 export { AutomationCompatibleInterface__factory } from "./factories/@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface__factory";
+export type { VRFCoordinatorV2Interface } from "./@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface";
+export { VRFCoordinatorV2Interface__factory } from "./factories/@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface__factory";
+export type { ConfirmedOwner } from "./@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwner";
+export { ConfirmedOwner__factory } from "./factories/@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwner__factory";
+export type { ConfirmedOwnerWithProposal } from "./@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwnerWithProposal";
+export { ConfirmedOwnerWithProposal__factory } from "./factories/@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwnerWithProposal__factory";
+export type { IOwnable } from "./@chainlink/contracts/src/v0.8/shared/interfaces/IOwnable";
+export { IOwnable__factory } from "./factories/@chainlink/contracts/src/v0.8/shared/interfaces/IOwnable__factory";
+export type { VRFConsumerBaseV2 } from "./@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2";
+export { VRFConsumerBaseV2__factory } from "./factories/@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2__factory";
 export type { IERC20 } from "./@openzeppelin/contracts/token/ERC20/IERC20";
 export { IERC20__factory } from "./factories/@openzeppelin/contracts/token/ERC20/IERC20__factory";
 export type { Donation } from "./contracts/Donation";

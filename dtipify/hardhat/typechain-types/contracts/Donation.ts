@@ -32,8 +32,8 @@ export declare namespace Donation {
     userbio: string;
     donationsReceived: BigNumberish;
     networkOption: string;
-    phoneContact: string;
     supporters: BigNumberish;
+    verified: boolean;
   };
 
   export type CreatorInfoStructOutput = [
@@ -44,8 +44,8 @@ export declare namespace Donation {
     userbio: string,
     donationsReceived: bigint,
     networkOption: string,
-    phoneContact: string,
-    supporters: bigint
+    supporters: bigint,
+    verified: boolean
   ] & {
     id: bigint;
     username: string;
@@ -54,8 +54,8 @@ export declare namespace Donation {
     userbio: string;
     donationsReceived: bigint;
     networkOption: string;
-    phoneContact: string;
     supporters: bigint;
+    verified: boolean;
   };
 
   export type SupporterStruct = {
@@ -74,33 +74,58 @@ export declare namespace Donation {
 export interface DonationInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "_owner"
+      | "acceptOwnership"
+      | "addVerifyBatch"
       | "checkUpkeep"
       | "contractBal"
       | "contractOwnerWithdraw"
       | "creatorCounter"
-      | "creatorWithdrawTip"
-      | "creatorWithdrawTipUpdated"
+      | "featuredCreator"
       | "getCreatorBal"
       | "getCreatorCount"
       | "getCreatorInfo"
       | "getCreatorList"
       | "getCreatorObj"
+      | "getRequestStatus"
       | "getSupportInfo"
       | "getSupporterList"
       | "getSupporterObj"
       | "getSupporters"
+      | "lastRequestId"
       | "owner"
       | "performUpkeep"
-      | "sendReceivedTipToCreators"
+      | "randomWordsNum"
+      | "rawFulfillRandomWords"
+      | "requestIds"
+      | "requestRandomWords"
+      | "s_requests"
+      | "sendContractBalanceToOwner"
       | "sendTip"
       | "sendTipERC20"
       | "setCreatorDetail"
+      | "transferOwnership"
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "CreatorEvent" | "SupporterEvent"
+    nameOrSignatureOrTopic:
+      | "CreatorEvent"
+      | "OwnershipTransferRequested"
+      | "OwnershipTransferred"
+      | "RequestFulfilled"
+      | "RequestSent"
+      | "SupporterEvent"
   ): EventFragment;
 
+  encodeFunctionData(functionFragment: "_owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "acceptOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addVerifyBatch",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "checkUpkeep",
     values: [BytesLike]
@@ -118,12 +143,8 @@ export interface DonationInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "creatorWithdrawTip",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "creatorWithdrawTipUpdated",
-    values: [BigNumberish, BigNumberish]
+    functionFragment: "featuredCreator",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getCreatorBal",
@@ -146,6 +167,10 @@ export interface DonationInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getRequestStatus",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getSupportInfo",
     values: [BigNumberish]
   ): string;
@@ -161,13 +186,37 @@ export interface DonationInterface extends Interface {
     functionFragment: "getSupporters",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "lastRequestId",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "performUpkeep",
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "sendReceivedTipToCreators",
+    functionFragment: "randomWordsNum",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "rawFulfillRandomWords",
+    values: [BigNumberish, BigNumberish[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "requestIds",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "requestRandomWords",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_requests",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "sendContractBalanceToOwner",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -180,9 +229,22 @@ export interface DonationInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setCreatorDetail",
-    values: [string, string, string, string, string]
+    values: [string, string, string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
   ): string;
 
+  decodeFunctionResult(functionFragment: "_owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "acceptOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "addVerifyBatch",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "checkUpkeep",
     data: BytesLike
@@ -200,11 +262,7 @@ export interface DonationInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "creatorWithdrawTip",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "creatorWithdrawTipUpdated",
+    functionFragment: "featuredCreator",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -228,6 +286,10 @@ export interface DonationInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getRequestStatus",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getSupportInfo",
     data: BytesLike
   ): Result;
@@ -243,13 +305,31 @@ export interface DonationInterface extends Interface {
     functionFragment: "getSupporters",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "lastRequestId",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "performUpkeep",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "sendReceivedTipToCreators",
+    functionFragment: "randomWordsNum",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "rawFulfillRandomWords",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "requestIds", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "requestRandomWords",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "s_requests", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "sendContractBalanceToOwner",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "sendTip", data: BytesLike): Result;
@@ -259,6 +339,10 @@ export interface DonationInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setCreatorDetail",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 }
@@ -272,8 +356,8 @@ export namespace CreatorEventEvent {
     userbio: string,
     donationsReceived: BigNumberish,
     networkOption: string,
-    _phoneContact: string,
-    supporters: BigNumberish
+    supporters: BigNumberish,
+    verified: boolean
   ];
   export type OutputTuple = [
     id: bigint,
@@ -283,8 +367,8 @@ export namespace CreatorEventEvent {
     userbio: string,
     donationsReceived: bigint,
     networkOption: string,
-    _phoneContact: string,
-    supporters: bigint
+    supporters: bigint,
+    verified: boolean
   ];
   export interface OutputObject {
     id: bigint;
@@ -294,8 +378,63 @@ export namespace CreatorEventEvent {
     userbio: string;
     donationsReceived: bigint;
     networkOption: string;
-    _phoneContact: string;
     supporters: bigint;
+    verified: boolean;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferRequestedEvent {
+  export type InputTuple = [from: AddressLike, to: AddressLike];
+  export type OutputTuple = [from: string, to: string];
+  export interface OutputObject {
+    from: string;
+    to: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [from: AddressLike, to: AddressLike];
+  export type OutputTuple = [from: string, to: string];
+  export interface OutputObject {
+    from: string;
+    to: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace RequestFulfilledEvent {
+  export type InputTuple = [
+    requestId: BigNumberish,
+    randomWords: BigNumberish[]
+  ];
+  export type OutputTuple = [requestId: bigint, randomWords: bigint[]];
+  export interface OutputObject {
+    requestId: bigint;
+    randomWords: bigint[];
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace RequestSentEvent {
+  export type InputTuple = [requestId: BigNumberish, numWords: BigNumberish];
+  export type OutputTuple = [requestId: bigint, numWords: bigint];
+  export interface OutputObject {
+    requestId: bigint;
+    numWords: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -364,6 +503,12 @@ export interface Donation extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  _owner: TypedContractMethod<[], [string], "view">;
+
+  acceptOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
+  addVerifyBatch: TypedContractMethod<[], [void], "nonpayable">;
+
   checkUpkeep: TypedContractMethod<
     [arg0: BytesLike],
     [[boolean, string] & { upkeepNeeded: boolean }],
@@ -376,15 +521,9 @@ export interface Donation extends BaseContract {
 
   creatorCounter: TypedContractMethod<[], [bigint], "view">;
 
-  creatorWithdrawTip: TypedContractMethod<
-    [index: BigNumberish, amount: BigNumberish],
-    [string],
-    "nonpayable"
-  >;
-
-  creatorWithdrawTipUpdated: TypedContractMethod<
-    [index: BigNumberish, amount: BigNumberish],
-    [string],
+  featuredCreator: TypedContractMethod<
+    [],
+    [Donation.CreatorInfoStructOutput[]],
     "nonpayable"
   >;
 
@@ -395,17 +534,9 @@ export interface Donation extends BaseContract {
   getCreatorInfo: TypedContractMethod<
     [index: BigNumberish],
     [
-      [
-        bigint,
-        string,
-        string,
-        string,
-        string,
-        bigint,
-        string,
-        string,
-        bigint
-      ] & { id: bigint }
+      [bigint, string, string, string, string, bigint, string, bigint] & {
+        id: bigint;
+      }
     ],
     "view"
   >;
@@ -419,6 +550,12 @@ export interface Donation extends BaseContract {
   getCreatorObj: TypedContractMethod<
     [_index: BigNumberish],
     [Donation.CreatorInfoStructOutput],
+    "view"
+  >;
+
+  getRequestStatus: TypedContractMethod<
+    [_requestId: BigNumberish],
+    [[boolean, bigint[]] & { fulfilled: boolean; randomWords: bigint[] }],
     "view"
   >;
 
@@ -448,11 +585,31 @@ export interface Donation extends BaseContract {
 
   getSupporters: TypedContractMethod<[], [bigint], "view">;
 
+  lastRequestId: TypedContractMethod<[], [bigint], "view">;
+
   owner: TypedContractMethod<[], [string], "view">;
 
   performUpkeep: TypedContractMethod<[arg0: BytesLike], [void], "nonpayable">;
 
-  sendReceivedTipToCreators: TypedContractMethod<[], [void], "nonpayable">;
+  randomWordsNum: TypedContractMethod<[], [bigint], "view">;
+
+  rawFulfillRandomWords: TypedContractMethod<
+    [requestId: BigNumberish, randomWords: BigNumberish[]],
+    [void],
+    "nonpayable"
+  >;
+
+  requestIds: TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
+
+  requestRandomWords: TypedContractMethod<[], [bigint], "nonpayable">;
+
+  s_requests: TypedContractMethod<
+    [arg0: BigNumberish],
+    [[boolean, boolean] & { fulfilled: boolean; exists: boolean }],
+    "view"
+  >;
+
+  sendContractBalanceToOwner: TypedContractMethod<[], [void], "nonpayable">;
 
   sendTip: TypedContractMethod<
     [_message: string, _index: BigNumberish],
@@ -476,9 +633,14 @@ export interface Donation extends BaseContract {
       _username: string,
       _ipfsHash: string,
       _userbio: string,
-      _phoneContact: string,
       _networkOption: string
     ],
+    [void],
+    "nonpayable"
+  >;
+
+  transferOwnership: TypedContractMethod<
+    [to: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -487,6 +649,15 @@ export interface Donation extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "_owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "acceptOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "addVerifyBatch"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "checkUpkeep"
   ): TypedContractMethod<
@@ -504,17 +675,10 @@ export interface Donation extends BaseContract {
     nameOrSignature: "creatorCounter"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "creatorWithdrawTip"
+    nameOrSignature: "featuredCreator"
   ): TypedContractMethod<
-    [index: BigNumberish, amount: BigNumberish],
-    [string],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "creatorWithdrawTipUpdated"
-  ): TypedContractMethod<
-    [index: BigNumberish, amount: BigNumberish],
-    [string],
+    [],
+    [Donation.CreatorInfoStructOutput[]],
     "nonpayable"
   >;
   getFunction(
@@ -528,17 +692,9 @@ export interface Donation extends BaseContract {
   ): TypedContractMethod<
     [index: BigNumberish],
     [
-      [
-        bigint,
-        string,
-        string,
-        string,
-        string,
-        bigint,
-        string,
-        string,
-        bigint
-      ] & { id: bigint }
+      [bigint, string, string, string, string, bigint, string, bigint] & {
+        id: bigint;
+      }
     ],
     "view"
   >;
@@ -550,6 +706,13 @@ export interface Donation extends BaseContract {
   ): TypedContractMethod<
     [_index: BigNumberish],
     [Donation.CreatorInfoStructOutput],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getRequestStatus"
+  ): TypedContractMethod<
+    [_requestId: BigNumberish],
+    [[boolean, bigint[]] & { fulfilled: boolean; randomWords: bigint[] }],
     "view"
   >;
   getFunction(
@@ -579,13 +742,39 @@ export interface Donation extends BaseContract {
     nameOrSignature: "getSupporters"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "lastRequestId"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "performUpkeep"
   ): TypedContractMethod<[arg0: BytesLike], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "sendReceivedTipToCreators"
+    nameOrSignature: "randomWordsNum"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "rawFulfillRandomWords"
+  ): TypedContractMethod<
+    [requestId: BigNumberish, randomWords: BigNumberish[]],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "requestIds"
+  ): TypedContractMethod<[arg0: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "requestRandomWords"
+  ): TypedContractMethod<[], [bigint], "nonpayable">;
+  getFunction(
+    nameOrSignature: "s_requests"
+  ): TypedContractMethod<
+    [arg0: BigNumberish],
+    [[boolean, boolean] & { fulfilled: boolean; exists: boolean }],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "sendContractBalanceToOwner"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "sendTip"
@@ -613,12 +802,14 @@ export interface Donation extends BaseContract {
       _username: string,
       _ipfsHash: string,
       _userbio: string,
-      _phoneContact: string,
       _networkOption: string
     ],
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[to: AddressLike], [void], "nonpayable">;
 
   getEvent(
     key: "CreatorEvent"
@@ -626,6 +817,34 @@ export interface Donation extends BaseContract {
     CreatorEventEvent.InputTuple,
     CreatorEventEvent.OutputTuple,
     CreatorEventEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferRequested"
+  ): TypedContractEvent<
+    OwnershipTransferRequestedEvent.InputTuple,
+    OwnershipTransferRequestedEvent.OutputTuple,
+    OwnershipTransferRequestedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
+  >;
+  getEvent(
+    key: "RequestFulfilled"
+  ): TypedContractEvent<
+    RequestFulfilledEvent.InputTuple,
+    RequestFulfilledEvent.OutputTuple,
+    RequestFulfilledEvent.OutputObject
+  >;
+  getEvent(
+    key: "RequestSent"
+  ): TypedContractEvent<
+    RequestSentEvent.InputTuple,
+    RequestSentEvent.OutputTuple,
+    RequestSentEvent.OutputObject
   >;
   getEvent(
     key: "SupporterEvent"
@@ -636,7 +855,7 @@ export interface Donation extends BaseContract {
   >;
 
   filters: {
-    "CreatorEvent(uint256,string,address,string,string,uint256,string,string,uint256)": TypedContractEvent<
+    "CreatorEvent(uint256,string,address,string,string,uint256,string,uint256,bool)": TypedContractEvent<
       CreatorEventEvent.InputTuple,
       CreatorEventEvent.OutputTuple,
       CreatorEventEvent.OutputObject
@@ -645,6 +864,50 @@ export interface Donation extends BaseContract {
       CreatorEventEvent.InputTuple,
       CreatorEventEvent.OutputTuple,
       CreatorEventEvent.OutputObject
+    >;
+
+    "OwnershipTransferRequested(address,address)": TypedContractEvent<
+      OwnershipTransferRequestedEvent.InputTuple,
+      OwnershipTransferRequestedEvent.OutputTuple,
+      OwnershipTransferRequestedEvent.OutputObject
+    >;
+    OwnershipTransferRequested: TypedContractEvent<
+      OwnershipTransferRequestedEvent.InputTuple,
+      OwnershipTransferRequestedEvent.OutputTuple,
+      OwnershipTransferRequestedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+
+    "RequestFulfilled(uint256,uint256[])": TypedContractEvent<
+      RequestFulfilledEvent.InputTuple,
+      RequestFulfilledEvent.OutputTuple,
+      RequestFulfilledEvent.OutputObject
+    >;
+    RequestFulfilled: TypedContractEvent<
+      RequestFulfilledEvent.InputTuple,
+      RequestFulfilledEvent.OutputTuple,
+      RequestFulfilledEvent.OutputObject
+    >;
+
+    "RequestSent(uint256,uint32)": TypedContractEvent<
+      RequestSentEvent.InputTuple,
+      RequestSentEvent.OutputTuple,
+      RequestSentEvent.OutputObject
+    >;
+    RequestSent: TypedContractEvent<
+      RequestSentEvent.InputTuple,
+      RequestSentEvent.OutputTuple,
+      RequestSentEvent.OutputObject
     >;
 
     "SupporterEvent(address,uint256,string)": TypedContractEvent<

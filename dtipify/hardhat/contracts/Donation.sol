@@ -6,13 +6,58 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
+import "@chainlink/contracts/src/v0.8/shared/access/ConfirmedOwner.sol";
 
+// import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
+contract Donation is ReentrancyGuard, AutomationCompatibleInterface, VRFConsumerBaseV2, ConfirmedOwner {
 
      using Counters for Counters.Counter;
     Counters.Counter private _creatorIds;
     uint public creatorCounter;
+
+    event RequestSent(uint256 requestId, uint32 numWords);
+    event RequestFulfilled(uint256 requestId, uint256[] randomWords);
+
+    struct RequestStatus {
+        bool fulfilled; // whether the request has been successfully fulfilled
+        bool exists; // whether a requestId exists
+        uint256[] randomWords;
+    }
+    mapping(uint256 => RequestStatus)
+        public s_requests; /* requestId --> requestStatus */
+    VRFCoordinatorV2Interface COORDINATOR;
+
+    // Your subscription ID.
+    uint64 s_subscriptionId;
+
+    // past requests Id.
+    uint256[] public requestIds;
+    uint256 public lastRequestId;
+
+    // The gas lane to use, which specifies the maximum gas price to bump to.
+    // For a list of available gas lanes on each network,
+    // see https://docs.chain.link/docs/vrf/v2/subscription/supported-networks/#configurations
+    bytes32 keyHash =
+        0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c;
+
+    // Depends on the number of requested values that you want sent to the
+    // fulfillRandomWords() function. Storing each word costs about 20,000 gas,
+    // so 100,000 is a safe default for this example contract. Test and adjust
+    // this limit based on the network that you select, the size of the request,
+    // and the processing of the callback request in the fulfillRandomWords()
+    // function.
+    uint32 callbackGasLimit = 100000;
+
+    // The default is 3, but you can set this higher.
+    uint16 requestConfirmations = 3;
+
+    // For this example, retrieve 2 random values in one request.
+    // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
+    uint32 numWords = 3;
+    uint256 public randomWordsNum;
     
     struct CreatorInfo {
        uint id;
@@ -22,8 +67,8 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
        string userbio;
        uint donationsReceived;
        string networkOption;
-       string phoneContact;
        uint supporters;
+       bool verified;
     }
 
     event CreatorEvent (
@@ -34,8 +79,8 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
        string userbio,
        uint donationsReceived,
        string networkOption,
-       string _phoneContact,
-       uint supporters
+       uint supporters,
+       bool verified
     );
     
     // Support struct.
@@ -55,27 +100,36 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
     // Event to emit 
 
     // payable address can receive ether
-    address payable public owner;
-
+    address payable public _owner;
+    uint256 interval;
+    uint256 lastTimeStamp;
     // payable constructor can receive ether. Assigning the contract deployer as the owner
-    constructor() payable {
-        owner = payable(msg.sender);
+    constructor(uint64 subscriptionId)
+    VRFConsumerBaseV2(0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed)
+    ConfirmedOwner(msg.sender)  {
+                COORDINATOR = VRFCoordinatorV2Interface(
+            0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed
+        );
+        s_subscriptionId = subscriptionId;
+        _owner = payable(msg.sender);
+
+        // update every 5 minutes for testing purpose change to every 7 days later
+        interval = 5 minutes;
+        lastTimeStamp = block.timestamp;
     }
 
     mapping(address => bool) isAddressExist;
     mapping(string => bool) isUsernameExist;
-    mapping(string => bool) isPhoneExist;
     mapping(address => uint256) creatorBalance;
     // List of all supporters.
     Supporter[] supporters;
     CreatorInfo[] creatorList;
-
+    CreatorInfo[]  featuredList;
      // function to create new creator account
     function setCreatorDetail(
         string memory _username, 
         string memory _ipfsHash, 
         string memory _userbio, 
-        string memory _phoneContact,
         string memory _networkOption) public { 
 
         // Validation
@@ -85,12 +139,12 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
         
         uint _donationsReceived;
         uint _supporters;
+        bool _verified;
         /**
         *@dev require statment to block multiple entry
         */
         require(isAddressExist[msg.sender] == false, "Address already exist");
         require(isUsernameExist[_username] == false, "Username already exist");
-        require(!isPhoneExist[_phoneContact], "Phone contact already exist");
          /* Increment the counter */
         _creatorIds.increment();
 
@@ -103,11 +157,9 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
                 _userbio, 
                 _donationsReceived, 
                 _networkOption, 
-                _phoneContact,
-                _supporters));
+                _supporters, _verified));
         isAddressExist[msg.sender] = true;
         isUsernameExist[_username] = true;
-        isPhoneExist[_phoneContact] = true;
         // emit a Creator event
         emit CreatorEvent (
         _creatorIds.current(),
@@ -117,8 +169,8 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
         _userbio,
        _donationsReceived,
        _networkOption,
-       _phoneContact,
-       _supporters
+       _supporters,
+       _verified
     );
     }
 
@@ -128,7 +180,7 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
     }
 
       // Return the entire list of creators
-    function getCreatorList() public view returns (CreatorInfo[] memory) {
+    function getCreatorList() public view returns (CreatorInfo[] memory creators) {
         return creatorList;
     }
 
@@ -147,7 +199,6 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
          string memory, 
          uint, 
          string memory, 
-         string memory,
          uint){
         CreatorInfo storage creatorDetail  = creatorList[index];
         return (
@@ -158,7 +209,6 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
         creatorDetail.userbio, 
         creatorDetail.donationsReceived, 
         creatorDetail.networkOption,
-        creatorDetail.phoneContact,
         creatorDetail.supporters);
     }
 
@@ -180,6 +230,7 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
 
 
         creatorList[_index].donationsReceived += msg.value;
+        // creatorList[_index].verified = true;
 
         // record creator balance on the contract
         address creatorAddress = creatorList[_index].walletAddress;
@@ -223,7 +274,7 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
             require(success, "Failed to send Ether");
 
             creatorList[_index].donationsReceived += _amount;
-
+            
             // record creator balance on the contract
             address creatorAddress = creatorList[_index].walletAddress;
             creatorBalance[creatorAddress] += _amount;
@@ -279,68 +330,46 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
         return creatorBal;
     }
 
-    // Creator withdraw function. This function can be called by the creator
-    function creatorWithdrawTip(uint index, uint amount) nonReentrant public returns (address payable _creatorAddress) {
-        CreatorInfo storage creatorDetail  =  creatorList[index];
-        uint creatorBal = creatorDetail.donationsReceived;    
-        address payable creatorAddress = creatorDetail.walletAddress;
-        creatorList[index].donationsReceived -= amount;
-        // check to ensure the amount to be withdrawn is not more than the creator balance
-        require(amount <= creatorBal, "Insufficient bal");
-
-        // Check to ensure the caller of the function is the creator
-        require(msg.sender == creatorAddress, "You are not the creator");
-
-        // // send input ether amount to creator
-        // Note that "receipient" is declared as payable
-        (bool success, ) = creatorAddress.call{value: amount}("");
-        require(success, "Failed to send Ether");  
-        return creatorAddress;
-    }
-
-     // Creator withdraw function. This function can be called by the creator
-    function creatorWithdrawTipUpdated(uint index, uint amount) nonReentrant public returns (address payable _creatorAddress) {
-        CreatorInfo storage creatorDetail  =  creatorList[index];
-        address payable creatorAddress = creatorDetail.walletAddress;
-        uint256 creatorBal = creatorBalance[creatorAddress];
-        creatorBal -= amount;
-        // check to ensure the amount to be withdrawn is not more than the creator balance
-        require(amount <= creatorBal, "Insufficient bal");
-
-        // Check to ensure the caller of the function is the creator
-        require(msg.sender == creatorAddress, "You are not the creator");
-
-        // // send input ether amount to creator
-        // Note that "receipient" is declared as payable
-        (bool success, ) = creatorAddress.call{value: amount}("");
-        require(success, "Failed to send Ether");  
-        return creatorAddress;
-    }
-
     // This will be called on the perform upkeep using the chainlink automation
-    function sendReceivedTipToCreators() nonReentrant public  {
-        address payable creatorAddress;
-        for(uint256 i = 0; i < creatorList.length; i++){
-        CreatorInfo storage creatorDetail  =  creatorList[i];
-        creatorAddress = creatorDetail.walletAddress;
-        uint256 creatorBal = creatorBalance[creatorAddress];
-
-        if(creatorBal > 0){
+    function sendContractBalanceToOwner() nonReentrant public  {
+        uint256 _contractBal = address(this).balance;
+        if(_contractBal > 0){
              // // send input ether amount to creator
         // Note that "receipient" is declared as payable
-        (bool success, ) = creatorAddress.call{value: creatorBal}("");
+        (bool success, ) = _owner.call{value: _contractBal}("");
         require(success, "Failed to send Ether"); 
         }
     }
-    }
+
+    // perfom automation once a creator achieve a certain milestone
+
+
 
     //  function to withdraw all ether from the contract
     function contractOwnerWithdraw() nonReentrant public {
         uint amount = address(this).balance;
         
         // send all ether to owner
-        (bool success, ) = owner.call{value : amount}("");
+        (bool success, ) = _owner.call{value : amount}("");
         require(success, "Failed to send ether");
+    }
+
+    // Automatically display the verify batch once a user receive their first donation using chainLink automation
+    function addVerifyBatch() public {
+        for(uint256 i = 0; i < creatorList.length; i++){
+            CreatorInfo storage creatorDetail = creatorList[i];
+            if(creatorDetail.donationsReceived > 0)
+            creatorDetail.verified = true;
+        }
+    }
+
+    // Using chainlink VRF randomly select 3 featured creators every 5 minutes
+    function featuredCreator() public returns (CreatorInfo[] memory creators){
+       uint256 requestId = requestRandomWords();
+        uint256 winnerIndex = randomWordsNum % featuredList.length;
+        CreatorInfo storage _featuredCreator  = featuredList[winnerIndex];
+        featuredList.push(_featuredCreator);
+        return featuredList;
     }
 
     // function to get contract balance
@@ -356,13 +385,99 @@ contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
         override
         returns (bool upkeepNeeded, bytes memory  /* performData */)
     {
-        uint256 contractBalance = address(this).balance;
-        upkeepNeeded = contractBalance > 0;
+        for(uint256 i = 0; i < getCreatorList().length; i++) {
+            CreatorInfo storage creatorDetail = creatorList[i];
+
+            if (creatorDetail.donationsReceived  > 0 ) {
+                upkeepNeeded = true;  // Upkeep is needed if any creator has received donations
+                break;  // Exit the loop as soon as a qualifying creator is found
+            }
+        }
+
+        // Additional check: Perform upkeep every 5 minutes
+        upkeepNeeded = upkeepNeeded || (block.timestamp - lastTimeStamp) > interval;
         // We don't use the checkData in this example. The checkData is defined when the Upkeep was registered.
     }
 
     function performUpkeep(bytes calldata /* performData */) external override {
-        sendReceivedTipToCreators();
+
+        addVerifyBatch();
+
+        // call the requestRandom function every 5 minutes update later to every 7 days
+        if ((block.timestamp - lastTimeStamp) > interval) {
+            lastTimeStamp = block.timestamp;
+            requestRandomWords();
+        }
         // We don't use the performData in this example. The performData is generated by the Automation Node's call to your checkUpkeep function
     } 
+
+     // Assumes the subscription is funded sufficiently.
+    function requestRandomWords()
+        public 
+        onlyOwner
+        returns (uint256 requestId)
+    {
+        // Will revert if subscription is not set and funded.
+        requestId = COORDINATOR.requestRandomWords(
+            keyHash,
+            s_subscriptionId,
+            requestConfirmations,
+            callbackGasLimit,
+            numWords
+        );
+        s_requests[requestId] = RequestStatus({
+            randomWords: new uint256[](0),
+            exists: true,
+            fulfilled: false
+        });
+        requestIds.push(requestId);
+        lastRequestId = requestId;
+        emit RequestSent(requestId, numWords);
+        return requestId;
+    }
+
+    function fulfillRandomWords(
+        uint256 _requestId,
+        uint256[] memory _randomWords
+    ) internal override {
+        require(s_requests[_requestId].exists, "request not found");
+        s_requests[_requestId].fulfilled = true;
+        s_requests[_requestId].randomWords = _randomWords;
+        // randomWordsNum = _randomWords[0]; // Set array-index to variable, easier to play with
+        
+         // Select 3 random creators and add them to the featured list
+        selectRandomCreators(3, _randomWords);
+
+
+        emit RequestFulfilled(_requestId, _randomWords);
+    }
+
+    function getRequestStatus(
+        uint256 _requestId
+    ) external view returns (bool fulfilled, uint256[] memory randomWords) {
+        require(s_requests[_requestId].exists, "request not found");
+        RequestStatus memory request = s_requests[_requestId];
+        return (request.fulfilled, request.randomWords);
+    }
+
+       function selectRandomCreators(uint256 count, uint256[] memory _randomWords) internal {
+        require(count <= creatorList.length, "Count exceeds total creators");
+
+        uint256 remainingCount = count;
+        uint256 currentIndex = creatorList.length;
+
+        while (remainingCount > 0) {
+            currentIndex = currentIndex - 1;
+            uint256 randomIndex = _randomWords[currentIndex % _randomWords.length] % creatorList.length;
+            swapCreators(currentIndex, randomIndex);
+            featuredList.push(creatorList[currentIndex]);
+            remainingCount = remainingCount - 1;
+        }
+    }
+
+    function swapCreators(uint256 index1, uint256 index2) internal {
+       CreatorInfo storage _creator = creatorList[index1];
+        creatorList[index1] = creatorList[index2];
+        creatorList[index2] = _creator;
+    }
 }

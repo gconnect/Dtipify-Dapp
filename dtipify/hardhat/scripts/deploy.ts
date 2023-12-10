@@ -13,8 +13,9 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
+  const CHAINLINK_SUBSCRIPTION_ID = 6677;
   // We get the contract to deploy
-  const donation = await ethers.deployContract("Donation");
+  const donation = await ethers.deployContract("Donation", [CHAINLINK_SUBSCRIPTION_ID]);
    await donation.waitForDeployment();
 
   console.log( `Donation is deployed to ${await donation.getAddress()}`);

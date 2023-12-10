@@ -3,7 +3,7 @@
 
 
 # Smart Contract Address
-The smart contract is currently deployed to polygon mumbai testnet [0x40DB6Bee9CAe6F8F9DaFFA6a51fcA4c7A6AffF2C](https://mumbai.polygonscan.com/address/0x40DB6Bee9CAe6F8F9DaFFA6a51fcA4c7A6AffF2C)
+The smart contract is currently deployed to polygon mumbai testnet [0xe681162ef874795Ab6da22a64568A51432657D82](https://mumbai.polygonscan.com/address/0xe681162ef874795Ab6da22a64568A51432657D82)
 
 # Inspiration
 The inspiration behind Dtipify stems from a genuine desire to empower and support the immense talent within the creative community. Recognizing the challenges that artists, musicians, writers, and content creators face in monetizing their work, we set out to create a solution that facilitates direct and instant appreciation from their audience.
@@ -30,6 +30,7 @@ We learned the importance of balancing innovation with usability and the signifi
 # Features of the Product:
 
 - Seamless Tip Sending: "Dtipify" offers a user-friendly interface that enables effortless tip sending to creators. Users can specify the desired amount and leave an optional message along with their tip.
+- Chainlink automation and randomness feature.
 - Multi-Platform Compatibility: "Dtipify" is accessible across various platforms, including web browsers, mobile devices, and tablets, ensuring that users can support their favorite creators from anywhere, at any time.
 - Secure Transactions: Built on blockchain technology, "Dtipify" ensures secure and transparent transactions. It leverages the advantages of decentralized networks, providing trust and reliability to both creators and supporters.
 - Creator Profile Pages: Each creator on "Dtipify" has a dedicated profile page where they can showcase their work, share updates, and express gratitude to their supporters.
