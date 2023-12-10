@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import CustomButton from './CustomButton'
 import CircleCheck from '../images/circle-check.svg'
+import VerifiedIcon from '../images/verified.jpeg'
 import SupporterModal from './Modal/SupporterModal'
 import { useAccount } from 'wagmi'
 import { truncate } from '../utils/truncate'
@@ -14,8 +15,8 @@ interface ICreator {
   supporters: number
   currency: string  
   creatorAddress: string
- phoneContact: string
-
+ phoneContact: string,
+  verified: boolean
 }
 
 export default function Creator(params: ICreator): JSX.Element{
@@ -38,14 +39,21 @@ export default function Creator(params: ICreator): JSX.Element{
     setShow(false)
   }
 
-
+  console.log(params.verified)
+  console.log(params.earnings)
   return (
    <div className="flex justify-center m-4 w-full">
       <div className="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-white shadow-lg">
         
       <Image className=" w-full lg:h-auto md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg" src={params.image} width={200} height={200} alt="profile pix" />
       <div className="p-6 flex flex-col justify-start">
-        <h5 className="text-gray-900 text-xl font-medium mb-2">{params.name}</h5>
+        <div className='flex'>    
+          <h5 className="text-gray-900 text-xl font-medium mb-2">
+            {params.name}
+          </h5>
+          {params.earnings > 0 ? <Image src={VerifiedIcon} alt="icon" width={48} /> : null
+          }
+        </div> 
         <p className="text-gray-700 text-base mb-4">
           {params.bio}
         </p>

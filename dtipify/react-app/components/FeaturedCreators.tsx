@@ -31,6 +31,7 @@ export default function FeaturedCreators() {
                 id={convertHexToNumber(creator.id) - 1}
                 name={creator.username}
                 bio={creator.userbio}
+                verified={creator.verified}
                 earnings={creator.donationsReceived.toString()/1e18 }
                 currency="MATIC" supporters={convertHexToNumber(creator.supporters)}
                 image={`https://gateway.pinata.cloud/ipfs/${creator.ipfsHash}`}
