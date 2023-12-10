@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.18;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 
 
-contract Donation is ReentrancyGuard {
+contract Donation is ReentrancyGuard, AutomationCompatibleInterface {
 
      using Counters for Counters.Counter;
     Counters.Counter private _creatorIds;
@@ -64,6 +65,7 @@ contract Donation is ReentrancyGuard {
     mapping(address => bool) isAddressExist;
     mapping(string => bool) isUsernameExist;
     mapping(string => bool) isPhoneExist;
+    mapping(address => uint256) creatorBalance;
     // List of all supporters.
     Supporter[] supporters;
     CreatorInfo[] creatorList;
@@ -179,6 +181,10 @@ contract Donation is ReentrancyGuard {
 
         creatorList[_index].donationsReceived += msg.value;
 
+        // record creator balance on the contract
+        address creatorAddress = creatorList[_index].walletAddress;
+        creatorBalance[creatorAddress] += msg.value;
+
         // increment the supporter count  
          creatorList[_index].supporters +=1;
    
@@ -217,6 +223,11 @@ contract Donation is ReentrancyGuard {
             require(success, "Failed to send Ether");
 
             creatorList[_index].donationsReceived += _amount;
+
+            // record creator balance on the contract
+            address creatorAddress = creatorList[_index].walletAddress;
+            creatorBalance[creatorAddress] += _amount;
+
 
             // increment the supporter if he has not already supported
             if(msg.sender != creatorList[_index].walletAddress){
@@ -269,7 +280,7 @@ contract Donation is ReentrancyGuard {
     }
 
     // Creator withdraw function. This function can be called by the creator
-    function creatorWithdrawTip(uint index, uint amount) public returns (address payable _creatorAddress){
+    function creatorWithdrawTip(uint index, uint amount) nonReentrant public returns (address payable _creatorAddress) {
         CreatorInfo storage creatorDetail  =  creatorList[index];
         uint creatorBal = creatorDetail.donationsReceived;    
         address payable creatorAddress = creatorDetail.walletAddress;
@@ -287,8 +298,44 @@ contract Donation is ReentrancyGuard {
         return creatorAddress;
     }
 
+     // Creator withdraw function. This function can be called by the creator
+    function creatorWithdrawTipUpdated(uint index, uint amount) nonReentrant public returns (address payable _creatorAddress) {
+        CreatorInfo storage creatorDetail  =  creatorList[index];
+        address payable creatorAddress = creatorDetail.walletAddress;
+        uint256 creatorBal = creatorBalance[creatorAddress];
+        creatorBal -= amount;
+        // check to ensure the amount to be withdrawn is not more than the creator balance
+        require(amount <= creatorBal, "Insufficient bal");
+
+        // Check to ensure the caller of the function is the creator
+        require(msg.sender == creatorAddress, "You are not the creator");
+
+        // // send input ether amount to creator
+        // Note that "receipient" is declared as payable
+        (bool success, ) = creatorAddress.call{value: amount}("");
+        require(success, "Failed to send Ether");  
+        return creatorAddress;
+    }
+
+    // This will be called on the perform upkeep using the chainlink automation
+    function sendReceivedTipToCreators() nonReentrant public  {
+        address payable creatorAddress;
+        for(uint256 i = 0; i < creatorList.length; i++){
+        CreatorInfo storage creatorDetail  =  creatorList[i];
+        creatorAddress = creatorDetail.walletAddress;
+        uint256 creatorBal = creatorBalance[creatorAddress];
+
+        if(creatorBal > 0){
+             // // send input ether amount to creator
+        // Note that "receipient" is declared as payable
+        (bool success, ) = creatorAddress.call{value: creatorBal}("");
+        require(success, "Failed to send Ether"); 
+        }
+    }
+    }
+
     //  function to withdraw all ether from the contract
-    function contractOwnerWithdraw() public {
+    function contractOwnerWithdraw() nonReentrant public {
         uint amount = address(this).balance;
         
         // send all ether to owner
@@ -300,4 +347,22 @@ contract Donation is ReentrancyGuard {
     function contractBal() public view returns(uint){
        return address(this).balance;
     }
+
+       function checkUpkeep(
+        bytes calldata /* checkData */
+    )
+        external
+        view
+        override
+        returns (bool upkeepNeeded, bytes memory  /* performData */)
+    {
+        uint256 contractBalance = address(this).balance;
+        upkeepNeeded = contractBalance > 0;
+        // We don't use the checkData in this example. The checkData is defined when the Upkeep was registered.
+    }
+
+    function performUpkeep(bytes calldata /* performData */) external override {
+        sendReceivedTipToCreators();
+        // We don't use the performData in this example. The performData is generated by the Automation Node's call to your checkUpkeep function
+    } 
 }

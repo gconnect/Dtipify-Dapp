@@ -5,15 +5,19 @@ require("dotenv").config({ path: ".env" });
 
 const config: HardhatUserConfig = {
   networks: {
-    "celo-mainnet": {
-      url: "https://forno.celo.org",
+    "polygon_mainnet": {
+      url: process.env.POLYGON_MAINNET_RPC,
       accounts: [process.env.PRIVATE_KEY as string],
-      chainId: 42220
+      chainId: 137
     },
-    "alfajores": {
-      url: "https://alfajores-forno.celo-testnet.org",
+    "polygon_mumbai": {
+      url: process.env.POLYGON_MUMBAI_RPC,
       accounts: [process.env.PRIVATE_KEY as string],
-      chainId: 44787
+      chainId: 80001
+    },
+    zkEVM: {
+      url: "https://rpc.public.zkevm-test.net",
+      accounts: [process.env.PRIVATE_KEY as string],
     }
   },
   etherscan: {
@@ -29,6 +33,9 @@ const config: HardhatUserConfig = {
         runs: 200
       }
     }
+  },
+  paths: {
+    artifacts: '../react-app/artifacts'
   },
 };
 

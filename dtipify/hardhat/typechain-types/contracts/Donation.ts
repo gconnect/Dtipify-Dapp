@@ -74,10 +74,12 @@ export declare namespace Donation {
 export interface DonationInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "checkUpkeep"
       | "contractBal"
       | "contractOwnerWithdraw"
       | "creatorCounter"
       | "creatorWithdrawTip"
+      | "creatorWithdrawTipUpdated"
       | "getCreatorBal"
       | "getCreatorCount"
       | "getCreatorInfo"
@@ -88,6 +90,8 @@ export interface DonationInterface extends Interface {
       | "getSupporterObj"
       | "getSupporters"
       | "owner"
+      | "performUpkeep"
+      | "sendReceivedTipToCreators"
       | "sendTip"
       | "sendTipERC20"
       | "setCreatorDetail"
@@ -97,6 +101,10 @@ export interface DonationInterface extends Interface {
     nameOrSignatureOrTopic: "CreatorEvent" | "SupporterEvent"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "checkUpkeep",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "contractBal",
     values?: undefined
@@ -111,6 +119,10 @@ export interface DonationInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "creatorWithdrawTip",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "creatorWithdrawTipUpdated",
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -151,6 +163,14 @@ export interface DonationInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "performUpkeep",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "sendReceivedTipToCreators",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "sendTip",
     values: [string, BigNumberish]
   ): string;
@@ -163,6 +183,10 @@ export interface DonationInterface extends Interface {
     values: [string, string, string, string, string]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "checkUpkeep",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "contractBal",
     data: BytesLike
@@ -177,6 +201,10 @@ export interface DonationInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "creatorWithdrawTip",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "creatorWithdrawTipUpdated",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -216,6 +244,14 @@ export interface DonationInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "performUpkeep",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "sendReceivedTipToCreators",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "sendTip", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "sendTipERC20",
@@ -328,6 +364,12 @@ export interface Donation extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  checkUpkeep: TypedContractMethod<
+    [arg0: BytesLike],
+    [[boolean, string] & { upkeepNeeded: boolean }],
+    "view"
+  >;
+
   contractBal: TypedContractMethod<[], [bigint], "view">;
 
   contractOwnerWithdraw: TypedContractMethod<[], [void], "nonpayable">;
@@ -335,6 +377,12 @@ export interface Donation extends BaseContract {
   creatorCounter: TypedContractMethod<[], [bigint], "view">;
 
   creatorWithdrawTip: TypedContractMethod<
+    [index: BigNumberish, amount: BigNumberish],
+    [string],
+    "nonpayable"
+  >;
+
+  creatorWithdrawTipUpdated: TypedContractMethod<
     [index: BigNumberish, amount: BigNumberish],
     [string],
     "nonpayable"
@@ -402,6 +450,10 @@ export interface Donation extends BaseContract {
 
   owner: TypedContractMethod<[], [string], "view">;
 
+  performUpkeep: TypedContractMethod<[arg0: BytesLike], [void], "nonpayable">;
+
+  sendReceivedTipToCreators: TypedContractMethod<[], [void], "nonpayable">;
+
   sendTip: TypedContractMethod<
     [_message: string, _index: BigNumberish],
     [void],
@@ -436,6 +488,13 @@ export interface Donation extends BaseContract {
   ): T;
 
   getFunction(
+    nameOrSignature: "checkUpkeep"
+  ): TypedContractMethod<
+    [arg0: BytesLike],
+    [[boolean, string] & { upkeepNeeded: boolean }],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "contractBal"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -446,6 +505,13 @@ export interface Donation extends BaseContract {
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "creatorWithdrawTip"
+  ): TypedContractMethod<
+    [index: BigNumberish, amount: BigNumberish],
+    [string],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "creatorWithdrawTipUpdated"
   ): TypedContractMethod<
     [index: BigNumberish, amount: BigNumberish],
     [string],
@@ -515,6 +581,12 @@ export interface Donation extends BaseContract {
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "performUpkeep"
+  ): TypedContractMethod<[arg0: BytesLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "sendReceivedTipToCreators"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "sendTip"
   ): TypedContractMethod<

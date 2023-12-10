@@ -1,11 +1,9 @@
 # Product Description:
 "Dtipify" is a cutting-edge decentralized application (DApp) that empowers users to support and appreciate the creative work of artists, musicians, writers, and content creators. With "Dtipify," users can easily send tips directly to their favorite creators, fostering a strong and sustainable relationship between creators and their supporters.
 
-This project contains Dtipify contract. Written in solidity. Currently deployed to Fantom Mainnet and Nextjs was used for the frontend interactions.
-
 
 # Smart Contract Address
-[0x5FbDB2315678afecb367f032d93F642f64180aa3](https://explorer.celo.org/alfajores/address/0x7DEB2DDdd19ff5242464Ba9C348920414BAfAC93#code)
+The smart contract is currently deployed to polygon mumbai testnet [0x40DB6Bee9CAe6F8F9DaFFA6a51fcA4c7A6AffF2C](https://mumbai.polygonscan.com/address/0x40DB6Bee9CAe6F8F9DaFFA6a51fcA4c7A6AffF2C)
 
 
 # Features of the Product:
@@ -19,6 +17,10 @@ This project contains Dtipify contract. Written in solidity. Currently deployed 
   # Future Plans/Improvements:
 - Real-Time Notifications: Users receive real-time notifications for tips received, allowing creators to express their appreciation promptly.
 - Enhanced Creator-User Interaction: "Dtipify" aims to incorporate features that enable direct communication between creators and their supporters, such as messaging functionalities or comment sections.
+- Account Abstraction Capabilities
+- Cross chain tipping
+- Polygon Id for proof of Identity
+- Bounties, Blog/Tutorials and Q&A
 - Subscription-Based Support: In the future, "Dtipify" plans to introduce subscription-based models where users can subscribe to their favorite creators, offering ongoing support in exchange for exclusive content or perks.
 - Social Integration: Integration with popular social media platforms will be explored, allowing creators to connect their existing social profiles and expand their reach.
 - Community Features: "Dtipify" envisions creating a vibrant community space where creators and supporters can interact, collaborate, and discover new talents.
