@@ -40,6 +40,7 @@ We learned the importance of balancing innovation with usability and the signifi
 - Enhanced Creator-User Interaction: "Dtipify" aims to incorporate features that enable direct communication between creators and their supporters, such as messaging functionalities or comment sections.
 - Account Abstraction Capabilities
 - Cross chain tipping
+- Chainlink VRF for randomly rewarding active contributors
 - Polygon Id for proof of Identity
 - Bounties, Blog/Tutorials and Q&A
 - Subscription-Based Support: In the future, "Dtipify" plans to introduce subscription-based models where users can subscribe to their favorite creators, offering ongoing support in exchange for exclusive content or perks.
