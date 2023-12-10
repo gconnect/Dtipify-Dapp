@@ -93,7 +93,7 @@ export default function CreatorModal({show, onHide} : IParam): JSX.Element {
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI.abi,
     functionName: 'setCreatorDetail',
-    args: [removeSpace(username), hash, bio, "phone", "" ],
+    args: [removeSpace(username), hash, bio, "network" ],
   })
 
   // handle vote state

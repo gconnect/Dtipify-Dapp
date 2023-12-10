@@ -28,7 +28,7 @@ const projectId = process.env.NEXT_PUBLIC_PROJECTID as string // get one at http
 const { chains, publicClient } = configureChains(
   [polygonMumbai, polygon],
   // [jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) })],
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string })]
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY as string })]
 );
   
 const { connectors } = getDefaultWallets({
