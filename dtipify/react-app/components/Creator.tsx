@@ -51,7 +51,7 @@ export default function Creator(params: ICreator): JSX.Element{
           <h5 className="text-gray-900 text-xl font-medium mb-2">
             {params.name}
           </h5>
-          {params.earnings > 0 ? <Image src={VerifiedIcon} alt="icon" width={48} /> : null
+          {params.verified ? <Image src={VerifiedIcon} alt="icon" width={48} /> : null
           }
         </div> 
         <p className="text-gray-700 text-base mb-4">
