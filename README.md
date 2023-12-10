@@ -5,6 +5,27 @@
 # Smart Contract Address
 The smart contract is currently deployed to polygon mumbai testnet [0x40DB6Bee9CAe6F8F9DaFFA6a51fcA4c7A6AffF2C](https://mumbai.polygonscan.com/address/0x40DB6Bee9CAe6F8F9DaFFA6a51fcA4c7A6AffF2C)
 
+# Inspiration
+The inspiration behind Dtipify stems from a genuine desire to empower and support the immense talent within the creative community. Recognizing the challenges that artists, musicians, writers, and content creators face in monetizing their work, we set out to create a solution that facilitates direct and instant appreciation from their audience.
+
+# What it does
+Dtipify is a cutting-edge decentralized application (DApp) designed to revolutionize the way users interact with and support their favorite creators. It enables users to send tips directly to artists, musicians, writers, and content creators, fostering a strong and sustainable relationship. By facilitating seamless and direct transactions, Dtipify bridges the gap between creators and their supporters, creating a more connected and vibrant creative ecosystem.
+
+# How we built it
+Dtipify was meticulously crafted using the latest technologies in decentralized applications. Leveraging blockchain and smart contract functionalities, we ensured secure and transparent transactions for both creators and users. Our development process involved collaboration between skilled developers, designers, and blockchain experts to create a user-friendly and efficient platform.
+
+# Challenges we ran into
+Building Dtipify posed several challenges, including the integration of chainlink automation, zkEVM, and polygon ID to ensure the efficiency of the app.  Since it was our first time integrating with these technologies, it was a bit challenging learning how these technologies work, going though video tutorials and documentation at the same time building the solution.
+
+Additionally, creating a seamless user experience while maintaining decentralization requires a delicate balance. Overcoming these challenges demanded collaboration, innovative problem-solving, and a commitment to our vision.
+
+# Accomplishments that we're proud of
+We are proud to have created a platform that empowers creators and users alike. Dtipify's successful implementation demonstrates our commitment to fostering a more sustainable and direct connection between creators and their audiences. Witnessing the positive impact on the creative community and the enthusiastic adoption of Dtipify is a significant accomplishment we take pride in.
+
+# What we learned
+The development of Dtipify provided invaluable lessons in navigating the complexities of decentralized applications, blockchain integration, and user experience design. We learned how zkEVM, PolygonID work and their use. We also learnt about the out of the box features provided by chainlink that makes building blockchain solutions as seamless as possible
+
+We learned the importance of balancing innovation with usability and the significance of community engagement in driving the success of a platform like Dtipify. 
 
 # Features of the Product:
 
@@ -26,13 +47,19 @@ The smart contract is currently deployed to polygon mumbai testnet [0x40DB6Bee9C
 - Community Features: "Dtipify" envisions creating a vibrant community space where creators and supporters can interact, collaborate, and discover new talents.
 - With "Dtipify," the world of digital content creation becomes even more rewarding, as creators receive direct support and recognition from their dedicated audience.
 
-
+# Technologies Used
+- Solidity and hardhat
+- Typescript
+- Polygon
+- Nextjs
+- Rainbowkit/Wagmi
+  
 # How to Setup the project
 - Fork/clone the repo
 - Do npm install or yarn add to add all required dependencies
 - To start the development server, navigate to react-app directory and type npm run dev to start the local server
   
-Live Demo
+# Live Demo
 - To test the features of the dapp. you can checkout the live link here.
 
 # LICENSE

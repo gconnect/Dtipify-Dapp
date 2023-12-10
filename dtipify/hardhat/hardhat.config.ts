@@ -22,7 +22,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      opera: process.env.VERIFY_API_KEY as string
+      polygonMumbai: process.env.VERIFY_API_KEY as string
     }
   },
   solidity: {
