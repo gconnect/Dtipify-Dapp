@@ -52,6 +52,7 @@ We learned the importance of balancing innovation with usability and the signifi
 - Solidity and hardhat
 - Typescript
 - Polygon
+- Chainlink
 - Nextjs
 - Rainbowkit/Wagmi
   
