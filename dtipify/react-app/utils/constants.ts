@@ -1,2 +1,3 @@
-export const CONTRACT_ADDRESS = "0xeF3850aeC5D37Dcb239B123C2b4ad6fcCEfa91db"
-export const CONTRACT_ABI =  require("./abis/donation.json")
+// mainnet 0x816dB7d8E53A918fD5FeAb37FcE5F0d5A6F82d1E
+export const CONTRACT_ADDRESS = "0x40DB6Bee9CAe6F8F9DaFFA6a51fcA4c7A6AffF2C"
+export const CONTRACT_ABI =  require("../artifacts/contracts/Donation.sol/Donation.json")

@@ -32,7 +32,7 @@ export default function FeaturedCreators() {
                 name={creator.username}
                 bio={creator.userbio}
                 earnings={creator.donationsReceived.toString()/1e18 }
-                currency="CELO" supporters={convertHexToNumber(creator.supporters)}
+                currency="MATIC" supporters={convertHexToNumber(creator.supporters)}
                 image={`https://gateway.pinata.cloud/ipfs/${creator.ipfsHash}`}
                 creatorAddress={creator.walletAddress}  
                 phoneContact={creator.phoneContact}            

@@ -48,7 +48,31 @@ export default function Header() {
                       href="/"
                       className="inline-flex items-center border-b-2 border-black px-1 pt-1 text-sm font-medium text-white"
                     >
-                      Home
+                      Bounties
+                    </Link>              
+                  </div>
+                  <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <Link
+                      href="/"
+                      className="inline-flex items-center border-b-2 border-black px-1 pt-1 text-sm font-medium text-white"
+                    >
+                      Blog
+                    </Link>              
+                  </div>
+                  <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <Link
+                      href="/"
+                      className="inline-flex items-center border-b-2 border-black px-1 pt-1 text-sm font-medium text-white"
+                    >
+                      Marketplace
+                    </Link>              
+                  </div>
+                  <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <Link
+                      href="/"
+                      className="inline-flex items-center border-b-2 border-black px-1 pt-1 text-sm font-medium text-white"
+                    >
+                      Q&A
                     </Link>              
                   </div>
                   {account &&
@@ -62,7 +86,7 @@ export default function Header() {
                     </div>
                   }
                 </div>
-                
+
               {
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   <ConnectButton showBalance={{ smallScreen: true, largeScreen: false }} />

@@ -5,14 +5,15 @@ import Layout from "../components/Layout";
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { SessionProvider } from "next-auth/react"
-import { celo, celoAlfajores, polygonMumbai } from "viem/chains";
+import {polygonMumbai, polygon, polygonZkEvmTestnet } from "viem/chains";
 import { publicProvider } from 'wagmi/providers/public';
+import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { Toaster } from 'react-hot-toast';
 
 import {
   Montserrat,
 } from '@next/font/google';
-import { Alfajores } from "@celo/rainbowkit-celo/chains";
+// import { Alfajores } from "@celo/rainbowkit-celo/chains";
 
 const montserrat =   Montserrat({
   subsets: ['latin'],
@@ -25,9 +26,9 @@ const montserrat =   Montserrat({
 const projectId = process.env.NEXT_PUBLIC_PROJECTID as string // get one at https://cloud.walletconnect.com/app
 
 const { chains, publicClient } = configureChains(
-  [celo, Alfajores, polygonMumbai],
-  // [jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) })]
-  [publicProvider()]
+  [polygonMumbai, polygon],
+  // [jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) })],
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string })]
 );
   
 const { connectors } = getDefaultWallets({

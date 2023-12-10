@@ -27,15 +27,15 @@ export default function CreatorModal({show, onHide} : IParam): JSX.Element {
   const [networkError, setNetworkError] = useState<string>("")
   const [pinStatus, setPinStatus] = useState<string>("")
   const [hash, setHash] = useState<string>("")
-  const [phone, setPhone] = useState<string>("")
+  // const [phone, setPhone] = useState<string>("")
 
   const userHandler = (e: React.FormEvent<HTMLInputElement>) => {
     setUsername(e.currentTarget.value)
   }
 
-  const phoneHandler = (e: React.FormEvent<HTMLInputElement>) => {
-    setPhone(e.currentTarget.value)
-  }
+  // const phoneHandler = (e: React.FormEvent<HTMLInputElement>) => {
+  //   setPhone(e.currentTarget.value)
+  // }
 
   const bioHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setBio(event.currentTarget.value)
@@ -87,22 +87,25 @@ export default function CreatorModal({show, onHide} : IParam): JSX.Element {
     
   }
 
+
   
   const { config } = usePrepareContractWrite({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI.abi,
     functionName: 'setCreatorDetail',
-    args: [removeSpace(username), hash, bio, phone, "celo" ],
+    args: [removeSpace(username), hash, bio, "phone", "" ],
   })
 
   // handle vote state
   const { data, write } = useContractWrite(config)
   const { isLoading, isSuccess } = useWaitForTransaction({
+    confirmations: 1,
       hash: data?.hash,  
   })
   console.log(data?.hash)   
 
   const createCreatorAccount = async () => {
+
     try{
       await createAccount()
       write?.()
@@ -165,8 +168,9 @@ export default function CreatorModal({show, onHide} : IParam): JSX.Element {
                 <label className="form-label inline-block mb-2 text-gray-700 my-2"> Wallet Address </label>
                 <FormInput placeholder="Wallet Address" value={!resolveDomain  ? address as string : resolveDomain } disabled={true} type="text" onChange={walletHandler} />
 
-                <label className="form-label inline-block mb-2 text-gray-700 my-2"> Phone Contact </label>
+                {/* <label className="form-label inline-block mb-2 text-gray-700 my-2"> Phone Contact </label>
                 <FormInput placeholder="Wallet Address" value={ phone } type="text" onChange={ phoneHandler } />
+                 */}
                   <label htmlFor="formFile" className="form-label inline-block mb-2 text-gray-700 my-2">Upload your profile picture</label>
                   <input className="form-control 
                   block
