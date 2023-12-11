@@ -5,6 +5,11 @@ require("dotenv").config({ path: ".env" });
 
 const config: HardhatUserConfig = {
   networks: {
+    fuji: {
+      url: process.env.AVALANCHE_QUICKNODE_MAINNET_URL,
+      accounts: [`0x` + process.env.PRIVATE_KEY],
+      chainId: 43114,
+    },
     "polygon_mainnet": {
       url: process.env.POLYGON_MAINNET_RPC,
       accounts: [process.env.PRIVATE_KEY as string],
