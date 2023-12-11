@@ -15,7 +15,7 @@ Dtipify is a cutting-edge decentralized application (DApp) designed to revolutio
 Dtipify was meticulously crafted using the latest technologies in decentralized applications. Leveraging blockchain and smart contract functionalities, we ensured secure and transparent transactions for both creators and users. Our development process involved collaboration between skilled developers, designers, and blockchain experts to create a user-friendly and efficient platform.
 
 # Challenges we ran into
-Building Dtipify posed several challenges, including the integration of chainlink automation, zkEVM, and polygon ID to ensure the efficiency of the app.  Since it was our first time integrating with these technologies, it was a bit challenging learning how these technologies work, going though video tutorials and documentation at the same time building the solution.
+Building Dtipify posed several challenges, including the integration of chainlink automation, and VRF, we also had challenge getting test token for avalanche. Since it was our first time integrating with these technologies, it was a bit challenging learning how these technologies work, going though video tutorials and documentation at the same time building the solution.
 
 Additionally, creating a seamless user experience while maintaining decentralization requires a delicate balance. Overcoming these challenges demanded collaboration, innovative problem-solving, and a commitment to our vision.
 
@@ -23,7 +23,9 @@ Additionally, creating a seamless user experience while maintaining decentraliza
 We are proud to have created a platform that empowers creators and users alike. Dtipify's successful implementation demonstrates our commitment to fostering a more sustainable and direct connection between creators and their audiences. Witnessing the positive impact on the creative community and the enthusiastic adoption of Dtipify is a significant accomplishment we take pride in.
 
 # What we learned
-The development of Dtipify provided invaluable lessons in navigating the complexities of decentralized applications, blockchain integration, and user experience design. We learned how zkEVM, PolygonID work and their use. We also learnt about the out of the box features provided by chainlink that makes building blockchain solutions as seamless as possible
+The development of Dtipify provided invaluable lessons in navigating the complexities of decentralized applications, blockchain integration, and user experience design. We learned how zkEVM, PolygonID work and their use. We also learnt about the out of the box features provided by chainlink that makes building blockchain solutions as seamless as possible.
+
+We were able to deploy to Avalanche blockchain for the first time. Also integrated with chainlink VRF and Automation for the first time.
 
 We learned the importance of balancing innovation with usability and the significance of community engagement in driving the success of a platform like Dtipify. 
 
@@ -52,8 +54,8 @@ We learned the importance of balancing innovation with usability and the signifi
 # Technologies Used
 - Solidity and hardhat
 - Typescript
-- Polygon
-- Chainlink
+- Avalanche
+- Chainlink Automation and VRF
 - Nextjs
 - Rainbowkit/Wagmi
   
