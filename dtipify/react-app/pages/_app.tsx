@@ -27,18 +27,18 @@ const montserrat =   Montserrat({
 const projectId = process.env.NEXT_PUBLIC_PROJECTID as string // get one at https://cloud.walletconnect.com/app
 
 const { chains, publicClient } = configureChains(
-  [polygonMumbai, polygon, avalancheFuji, avalanche],
-  // [jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) })],
+  [polygonMumbai, polygon, polygonZkEvmTestnet, avalancheFuji, avalanche],
+  [jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) })],
   // [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY as string })],
-  [jsonRpcProvider({
-    rpc: (chain: Chain) => {
-      if (chain.id === avalanche.id) return { http: chain.rpcUrls.default };
-      if (chain.id === avalancheFuji.id) return { http: chain.rpcUrls.default };
-      if (chain.id === polygon.id) return { http: chain.rpcUrls.default };
-      if (chain.id === polygonMumbai.id) return { http: chain.rpcUrls.default };
-      return null;
-    },
-  }),]
+  // [jsonRpcProvider({
+  //   rpc: (chain: Chain) => {
+  //     if (chain.id === avalanche.id) return { http: chain.rpcUrls.default };
+  //     if (chain.id === avalancheFuji.id) return { http: chain.rpcUrls.default };
+  //     if (chain.id === polygon.id) return { http: chain.rpcUrls.default };
+  //     if (chain.id === polygonMumbai.id) return { http: chain.rpcUrls.default };
+  //     return null;
+  //   }
+  // }),]
 );
   
 const { connectors } = getDefaultWallets({

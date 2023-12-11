@@ -87,6 +87,7 @@ export interface DonationInterface extends Interface {
       | "getCreatorInfo"
       | "getCreatorList"
       | "getCreatorObj"
+      | "getFeaturedCreatorList"
       | "getRequestStatus"
       | "getSupportInfo"
       | "getSupporterList"
@@ -165,6 +166,10 @@ export interface DonationInterface extends Interface {
   encodeFunctionData(
     functionFragment: "getCreatorObj",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFeaturedCreatorList",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getRequestStatus",
@@ -283,6 +288,10 @@ export interface DonationInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getCreatorObj",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFeaturedCreatorList",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -553,6 +562,12 @@ export interface Donation extends BaseContract {
     "view"
   >;
 
+  getFeaturedCreatorList: TypedContractMethod<
+    [],
+    [Donation.CreatorInfoStructOutput[]],
+    "view"
+  >;
+
   getRequestStatus: TypedContractMethod<
     [_requestId: BigNumberish],
     [[boolean, bigint[]] & { fulfilled: boolean; randomWords: bigint[] }],
@@ -708,6 +723,9 @@ export interface Donation extends BaseContract {
     [Donation.CreatorInfoStructOutput],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "getFeaturedCreatorList"
+  ): TypedContractMethod<[], [Donation.CreatorInfoStructOutput[]], "view">;
   getFunction(
     nameOrSignature: "getRequestStatus"
   ): TypedContractMethod<

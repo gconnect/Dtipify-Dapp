@@ -8,7 +8,7 @@ export default function EarningsTab(param: IParams): JSX.Element{
   return (
     <div className='flex'>
       <div className='bg-gray-500 p-8 rounded-lg'>
-        <h1 className='font-bold'>{`${ param.donationsReceived } MATIC `}</h1>
+        <h1 className='font-bold'>{`${ param.donationsReceived } AVAX `}</h1>
         <p>All time Earnings</p>
       </div>
       <div className='bg-gray-500 p-8 rounded-lg ml-8'>

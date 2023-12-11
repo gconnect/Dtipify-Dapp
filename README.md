@@ -3,7 +3,7 @@
 
 
 # Smart Contract Address
-The smart contract is currently deployed to polygon mumbai testnet [0xe681162ef874795Ab6da22a64568A51432657D82](https://mumbai.polygonscan.com/address/0xe681162ef874795Ab6da22a64568A51432657D82)
+The smart contract is currently deployed to Avalanche fuji testnet [0xBC693e23a3c0cA72e02E1FAD7AD33684AE5A8602](https://testnet.snowtrace.io/address/0xBC693e23a3c0cA72e02E1FAD7AD33684AE5A8602)
 
 # Inspiration
 The inspiration behind Dtipify stems from a genuine desire to empower and support the immense talent within the creative community. Recognizing the challenges that artists, musicians, writers, and content creators face in monetizing their work, we set out to create a solution that facilitates direct and instant appreciation from their audience.
