@@ -27,7 +27,7 @@ const montserrat =   Montserrat({
 const projectId = process.env.NEXT_PUBLIC_PROJECTID as string // get one at https://cloud.walletconnect.com/app
 
 const { chains, publicClient } = configureChains(
-  [polygonMumbai, polygon, polygonZkEvmTestnet, avalancheFuji, avalanche],
+  [avalancheFuji, avalanche],
   [jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) })],
   // [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_MUMBAI_API_KEY as string })],
   // [jsonRpcProvider({
